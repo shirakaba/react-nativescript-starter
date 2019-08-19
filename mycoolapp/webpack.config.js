@@ -11,6 +11,16 @@ const { NativeScriptWorkerPlugin } = require("nativescript-worker-loader/NativeS
 const TerserPlugin = require("terser-webpack-plugin");
 const hashSalt = Date.now().toString();
 
+const babelOptions = {
+    babelrc: false,
+    presets: [
+        "@babel/preset-react"
+    ],
+    plugins: [
+        ["@babel/plugin-proposal-class-properties", { loose: true }]
+    ]
+};
+
 module.exports = env => {
     // Add your custom Activities, Services and other Android app components here.
     const appComponents = [
@@ -31,7 +41,8 @@ module.exports = env => {
 
     const {
         // The 'appPath' and 'appResourcesPath' values are fetched from
-        // the nsconfig.json configuration file.
+        // the nsconfig.json configuration file
+        // when bundling with `tns run android|ios --bundle`.
         appPath = "app",
         appResourcesPath = "app/App_Resources",
 
@@ -95,7 +106,7 @@ module.exports = env => {
             hashSalt
         },
         resolve: {
-            extensions: [".ts", ".js", ".scss", ".css"],
+            extensions: [".ts", ".tsx", ".js", ".jsx", ".scss", ".css"],
             // Resolve {N} system modules from tns-core-modules
             modules: [
                 resolve(__dirname, "node_modules/tns-core-modules"),
@@ -104,7 +115,7 @@ module.exports = env => {
                 "node_modules",
             ],
             alias: {
-                '~': appFullPath
+                '~': appFullPath,
             },
             // resolve symlinks to symlinked modules
             symlinks: true
@@ -163,7 +174,7 @@ module.exports = env => {
         module: {
             rules: [
                 {
-                    include: join(appFullPath, entryPath),
+                    test: nsWebpack.getEntryPathRegExp(appFullPath, entryPath),
                     use: [
                         // Require all Android app components
                         platform === "android" && {
@@ -205,21 +216,36 @@ module.exports = env => {
                 },
 
                 {
-                    test: /\.ts$/,
+                    test: /\.js(x?)$/,
+                    exclude: /node_modules/,
                     use: {
-                        loader: "ts-loader",
-                        options: {
-                            configFile: tsConfigPath,
-                            // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#faster-builds
-                            // https://github.com/TypeStrong/ts-loader/blob/ea2fcf925ec158d0a536d1e766adfec6567f5fb4/README.md#hot-module-replacement
-                            transpileOnly: true,
-                            allowTsInNodeModules: true,
-                            compilerOptions: {
-                                sourceMap: isAnySourceMapEnabled,
-                                declaration: false
-                            }
-                        },
-                    }
+                        loader: "babel-loader",
+                        options: babelOptions
+                    },
+                },
+
+                {
+                    test: /\.ts(x?)$/,
+                    use: [
+                        {
+                            loader: "awesome-typescript-loader",
+                            options: {
+                                configFileName: "tsconfig.tns.json",
+                                transpileOnly: true,
+                                useBabel: true,
+                                useCache: true,
+                                cacheDirectory: ".awcache",
+                                babelOptions: babelOptions,
+                                babelCore: "@babel/core",
+                                /* I'm not sure of the correct way to input sourceMap, so trying both ways indicated
+                                 * in https://github.com/s-panferov/awesome-typescript-loader/issues/526 */
+                                compilerOptions: {
+                                    sourceMap: isAnySourceMapEnabled
+                                },
+                                sourceMap: isAnySourceMapEnabled
+                            },
+                        }
+                    ]
                 },
             ]
         },
@@ -281,6 +307,8 @@ module.exports = env => {
     }
 
     if (hmr) {
+        /* WARNING: HMR is not yet supported in React NativeScript, so don't bother using it.
+         *          HMR will be supported once the React team release their new standalone React DevTools.  */
         config.plugins.push(new webpack.HotModuleReplacementPlugin());
     }
 
