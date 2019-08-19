@@ -9,9 +9,9 @@
     }
   },
   "main": "app.js",
-  "description": "NativeScript Application",
-  "license": "SEE LICENSE IN <your-license-filename>",
-  "repository": "<fill-your-repository-here>",
+  "description": "Starter boilerplate for a React NativeScript app",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": "https://github.com/shirakaba/react-nativescript-starter.git",
   "dependencies": {
     "nativescript-theme-core": "~1.0.6",
     "react": "16.9.0",
