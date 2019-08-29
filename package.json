@@ -1,4 +1,6 @@
 {
+  "name": "tns-template-starter-react",
+  "version": "6.0.0",
   "nativescript": {
     "id": "org.nativescript.mycoolapp",
     "tns-android": {
