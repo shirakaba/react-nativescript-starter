@@ -6,7 +6,8 @@
     },
     "tns-ios": {
       "version": "6.0.2"
-    }
+    },
+    "templateVersion": "v2"
   },
   "main": "app.js",
   "description": "Starter boilerplate for a React NativeScript app",
