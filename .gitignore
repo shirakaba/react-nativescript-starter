@@ -36,3 +36,4 @@ typings/
 
 # Npm files
 package-lock.json
+*.tgz
