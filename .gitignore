@@ -33,3 +33,7 @@ typings/
 !.vscode/extensions.json
 
 .awcache
+
+# Npm files
+package-lock.json
+*.tgz
