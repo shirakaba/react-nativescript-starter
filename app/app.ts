@@ -3,6 +3,18 @@ Object.defineProperty(global, '__DEV__', { value: false });
 
 import * as React from "react";
 import * as ReactNativeScript from "react-nativescript";
-import AppContainer, { rootRef } from "./AppContainer";
+import AppContainer from "./AppContainer";
 
-ReactNativeScript.start(React.createElement(AppContainer, {}, null), rootRef);
+export const rootRef: React.RefObject<any> = React.createRef<any>();
+
+ReactNativeScript.start(
+    React.createElement(
+        AppContainer,
+        {
+            forwardedRef: rootRef
+        },
+        null
+    ),
+    /* This ref MUST match the ref that you pass into the base component of your app container. */
+    rootRef
+);

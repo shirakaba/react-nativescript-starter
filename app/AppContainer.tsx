@@ -1,23 +1,40 @@
 import * as React from "react";
-import { $TabView, $TabViewItem, $StackLayout, $Label } from "react-nativescript";
+import { $Page, $Label, $ActionBar, $GridLayout, $FormattedString, $Span } from "react-nativescript";
+import { Page } from "tns-core-modules/ui/page/page";
 
-export const rootRef: React.RefObject<any> = React.createRef<any>();
+interface Props {
+    forwardedRef: React.RefObject<Page>,
+}
 
-// See the testComponents directory for many examples of components (and ref-forwarding).
-const AppContainer = () => (
-    // Do NOT forget to pass in this rootRef, otherwise your app will crash on startup! :)
-    <$TabView ref={rootRef} selectedIndex={0}>
-        <$TabViewItem title={"One"}>
-            <$StackLayout height={{ value: 100, unit: "%"}} width={{ value: 100, unit: "%"}}>
-                <$Label>Uno</$Label>
-            </$StackLayout>
-        </$TabViewItem>
-        <$TabViewItem title={"Two"}>
-            <$StackLayout height={{ value: 100, unit: "%"}} width={{ value: 100, unit: "%"}}>
-                <$Label>Dos</$Label>
-            </$StackLayout>
-        </$TabViewItem>
-    </$TabView>
-);
+interface State {
+
+}
+
+class AppContainer extends React.Component<Props, State> {
+    componentDidMount(){
+        this.props.forwardedRef.current!.addCssFile("AppContainer.scss");
+    }
+
+    render(){
+        const { forwardedRef } = this.props;
+
+        return (
+            <$Page ref={forwardedRef} className="page">
+                <$ActionBar className="action-bar">
+                    <$Label className="action-bar-title">Home</$Label>
+                </$ActionBar>
+        
+                <$GridLayout>
+                    <$Label className="info" horizontalAlignment="center" verticalAlignment="middle">
+                        <$FormattedString>
+                            <$Span className="fa" text="&#xf135; "/>
+                            <$Span text="message"/>
+                        </$FormattedString>
+                    </$Label>
+                </$GridLayout>
+            </$Page>
+        );
+    }
+}
 
 export default AppContainer;
