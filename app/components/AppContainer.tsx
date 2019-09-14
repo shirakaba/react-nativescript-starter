@@ -13,7 +13,7 @@ interface State {
 class AppContainer extends React.Component<Props, State> {
     componentDidMount(){
         const page = this.props.forwardedRef.current;
-        page!.addCssFile("./AppContainer.scss");
+        page!.addCssFile("./components/AppContainer.scss"); // Path is relative to the 'app' folder; not relative to this file!
     }
 
     render(){
@@ -28,8 +28,8 @@ class AppContainer extends React.Component<Props, State> {
                 <$GridLayout>
                     <$Label className="info" horizontalAlignment="center" verticalAlignment="middle">
                         <$FormattedString>
-                            <$Span className="fa" text="&#xf135; "/>
-                            <$Span text="message"/>
+                            <$Span className="fa" text="&#xf135;"/>
+                            <$Span text=" message"/>
                         </$FormattedString>
                     </$Label>
                 </$GridLayout>

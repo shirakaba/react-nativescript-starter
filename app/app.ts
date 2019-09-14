@@ -3,7 +3,7 @@ Object.defineProperty(global, '__DEV__', { value: false });
 
 import * as React from "react";
 import * as ReactNativeScript from "react-nativescript";
-import AppContainer from "./AppContainer";
+import AppContainer from "./components/AppContainer";
 
 export const rootRef: React.RefObject<any> = React.createRef<any>();
 
