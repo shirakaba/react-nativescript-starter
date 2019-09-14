@@ -12,7 +12,8 @@ interface State {
 
 class AppContainer extends React.Component<Props, State> {
     componentDidMount(){
-        this.props.forwardedRef.current!.addCssFile("AppContainer.scss");
+        const page = this.props.forwardedRef.current;
+        page!.addCssFile("./AppContainer.scss");
     }
 
     render(){
