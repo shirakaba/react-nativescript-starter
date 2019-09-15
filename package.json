@@ -14,7 +14,7 @@
   "main": "app.js",
   "description": "Starter boilerplate for a React NativeScript app",
   "license": "SEE LICENSE IN LICENSE",
-  "repository": "https://github.com/shirakaba/react-nativescript-starter.git",
+  "repository": "https://github.com/shirakaba/tns-template-blank-react",
   "dependencies": {
     "nativescript-theme-core": "~1.0.6",
     "react": "^16.9.0",
