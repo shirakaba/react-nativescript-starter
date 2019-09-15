@@ -11,16 +11,6 @@ const { NativeScriptWorkerPlugin } = require("nativescript-worker-loader/NativeS
 const TerserPlugin = require("terser-webpack-plugin");
 const hashSalt = Date.now().toString();
 
-const babelOptions = {
-    babelrc: false,
-    presets: [
-        "@babel/preset-react"
-    ],
-    plugins: [
-        ["@babel/plugin-proposal-class-properties", { loose: true }]
-    ]
-};
-
 module.exports = env => {
     // Add your custom Activities, Services and other Android app components here.
     const appComponents = [
@@ -56,6 +46,25 @@ module.exports = env => {
         unitTesting, // --env.unitTesting,
         verbose, // --env.verbose
     } = env;
+
+    const babelOptions = {
+        babelrc: false,
+        presets: [
+            // https://github.com/facebook/create-react-app/tree/master/packages/babel-preset-react-app
+            "@babel/preset-react"
+        ],
+        plugins: [
+            ...(
+                hmr ? 
+                [
+                    ["react-hot-loader/babel"]
+                ] :
+                []
+            ),
+            ["@babel/plugin-proposal-class-properties", { loose: true }]
+        ]
+    }
+
     const isAnySourceMapEnabled = !!sourceMap || !!hiddenSourceMap;
     const externals = nsWebpack.getConvertedExternals(env.externals);
 
@@ -114,7 +123,14 @@ module.exports = env => {
                 "node_modules",
             ],
             alias: {
-                '~': appFullPath
+                '~': appFullPath,
+                ...(
+                    hmr ?
+                        /* Needed (I think) for react-hot-loader.
+                         * Note that there is no @hot-loader/react-nativescript to alias to, so I can't comment on whether HMR will work for hooks. */
+                        { "react-dom": "react-nativescript" } :
+                        {}
+                    ),
             },
             // resolve symlinks to symlinked modules
             symlinks: true
@@ -253,6 +269,23 @@ module.exports = env => {
             new webpack.DefinePlugin({
                 "global.TNS_WEBPACK": "true",
                 "process": "global.process",
+                /* For various libraries in the React ecosystem. */
+                "__DEV__": production ? "false" : "true",
+                ...(
+                    hmr ?
+                        {
+                            /* react-hot-loader expects to run in an environment where globals are stored on the `window` object.
+                             * NativeScript uses `global` instead, so we'll alias that to satisfy it.
+                             *
+                             * Somehow `var globalValue = window` throws a ReferenceError if `window` is aliased to `global`,
+                             * but is fine if aliased to `global.global`. */
+                            "window": "global.global",
+                            /* Stops react-hot-loader from being bundled in production mode:
+                            * https://github.com/gaearon/react-hot-loader/issues/602#issuecomment-340246945 */
+                            "process.env.NODE_ENV": JSON.stringify(production ? "production" : "development"),
+                        } :
+                        {}
+                ),
             }),
             // Remove all files from the out dir.
             new CleanWebpackPlugin(itemsToClean, { verbose: !!verbose }),
@@ -306,11 +339,12 @@ module.exports = env => {
     }
 
     if (hmr) {
-        /* WARNING: HMR is not yet supported in React NativeScript, so don't bother using it.
-         *          HMR will be supported once the React team release their new standalone React DevTools.  */
-        config.plugins.push(new webpack.HotModuleReplacementPlugin());
+        /* react-hot-loader is very intrusive, so we'll disable HMR during production builds.
+         * https://github.com/gaearon/react-hot-loader/issues/602#issuecomment-340246945 */
+        if(!production){
+            config.plugins.push(new webpack.HotModuleReplacementPlugin());
+        }
     }
-
 
     return config;
 };
