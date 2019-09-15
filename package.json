@@ -11,10 +11,26 @@
     },
     "templateVersion": "v2"
   },
-  "main": "app.js",
-  "description": "Starter boilerplate for a React NativeScript app",
-  "license": "SEE LICENSE IN LICENSE",
-  "repository": "https://github.com/shirakaba/tns-template-blank-react",
+  "description": "Blank template for NativeScript apps using React.",
+  "author": "Jamie Birch <14055146+shirakaba@users.noreply.github.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shirakaba/tns-template-blank-react.git"
+  },
+  "homepage": "https://github.com/shirakaba/tns-template-blank-react",
+  "bugs": {
+    "url": "https://github.com/shirakaba/tns-template-blank-react/issues"
+  },
+  "keywords": [
+    "mobile",
+    "nativescript",
+    "{N}",
+    "tns",
+    "react",
+    "react-nativescript",
+    "template"
+  ],
   "dependencies": {
     "nativescript-theme-core": "~1.0.6",
     "react": "^16.9.0",
