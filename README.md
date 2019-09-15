@@ -38,9 +38,9 @@ tns create my-blank-react --template tns-template-blank-react
 cd my-blank-react
 npm install
 
-tns run android --no-hmr
+tns run android
 # or
-tns run ios --no-hmr
+tns run ios
 ```
 
 **NB:** Please, keep in mind that the master branch may refer to dependencies that are not on NPM yet!
