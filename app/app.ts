@@ -2,7 +2,7 @@ import 'react-hot-loader'; // Must be imported before React and ReactNativeScrip
 import * as React from "react";
 
 /* Controls react-nativescript log verbosity. true: all logs; false: only error logs. */
-Object.defineProperty(global, '__DEV__', { value: true });
+Object.defineProperty(global, '__DEV__', { value: false });
 import * as ReactNativeScript from "react-nativescript";
 import AppContainer from "./components/AppContainer";
 
