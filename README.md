@@ -40,6 +40,8 @@ tns create my-blank-react --template tns-template-blank-react
 cd my-blank-react
 npm install
 
+tns preview
+# or
 tns run android
 # or
 tns run ios
