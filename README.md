@@ -11,9 +11,11 @@ tns create my-blank-react --template tns-template-blank-react
 cd my-blank-react
 npm install
 
-tns run android --bundle
+tns preview
 # or
-tns run ios --bundle
+tns run android
+# or
+tns run ios
 ```
 
 > Note: This command will create a new NativeScript app that uses the latest version of this template published to [npm](https://www.npmjs.com/package/tns-template-blank-react).
@@ -38,6 +40,8 @@ tns create my-blank-react --template tns-template-blank-react
 cd my-blank-react
 npm install
 
+tns preview
+# or
 tns run android
 # or
 tns run ios
