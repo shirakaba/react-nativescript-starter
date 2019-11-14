@@ -17,3 +17,4 @@ typings/
 .vscode
 .npmrc
 *.tgz
+.awcache
