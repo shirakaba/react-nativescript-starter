@@ -1,14 +1,11 @@
 # NativeScript
-hooks/*
+hooks/
 node_modules/
 platforms/
-.update_backup
 
 # NativeScript Template
 *.js.map
-*.js
 !webpack.config.js
-!hooks/after-createProject/after-createProject.js
 
 # Logs
 logs
@@ -35,7 +32,3 @@ typings/
 !.vscode/extensions.json
 
 .awcache
-
-# Npm files
-package-lock.json
-*.tgz
