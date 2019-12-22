@@ -1,8 +1,8 @@
 import { hot } from 'react-hot-loader/root';
 import * as React from "react";
 import { $Page, $Label, $ActionBar, $GridLayout, $FormattedString, $Span, $Switch, $Frame } from "react-nativescript";
-import { ItemSpec } from 'tns-core-modules/ui/layouts/grid-layout/grid-layout';
-import { Frame, Page } from 'tns-core-modules/ui/frame/frame';
+import { Frame, Page } from "@nativescript/core";
+import { ItemSpec } from '@nativescript/core/ui/layouts/grid-layout/grid-layout';
 
 interface Props {
     forwardedRef: React.RefObject<Frame>,
@@ -31,15 +31,15 @@ class AppContainer extends React.Component<Props, State> {
 
         return (
             <$Frame ref={forwardedRef}>
-                <$Page ref={this.pageRef} className="page" actionBarHidden={false}>
-                    <$ActionBar className="action-bar">
-                        <$Label className="action-bar-title">Home</$Label>
+                <$Page ref={this.pageRef} actionBarHidden={false}>
+                    <$ActionBar>
+                        <$Label>Home</$Label>
                     </$ActionBar>
             
                     <$GridLayout rows={[new ItemSpec(1, "star")]} columns={[new ItemSpec(1, "star")]}>
-                        <$Label row={0} col={0} className="info" horizontalAlignment="center" verticalAlignment="middle">
+                        <$Label row={0} col={0} className="info">
                             <$FormattedString>
-                                <$Span className="fa" text="&#xf135;"/>
+                                <$Span className="fas" text="&#xf135;"/>
                                 <$Span text=" MESSAGE"/>
                             </$FormattedString>
                         </$Label>

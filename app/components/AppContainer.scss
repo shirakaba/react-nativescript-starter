@@ -1,10 +1,12 @@
 ﻿// Start custom common variables
-@import '../app-variables';
+@import '~@nativescript/theme/scss/variables/blue';
 // End custom common variables
 // Custom styles
-.fa {
-    color: $accent-dark;
+.fas {
+    @include colorize($color: accent);
 }
 .info {
     font-size: 20;
+    horizontal-align: center;
+    vertical-align: middle;
 }

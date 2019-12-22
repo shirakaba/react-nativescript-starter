@@ -124,13 +124,8 @@ module.exports = env => {
             ],
             alias: {
                 '~': appFullPath,
-                ...(
-                    hmr ?
-                        /* Needed (I think) for react-hot-loader.
-                         * Note that there is no @hot-loader/react-nativescript to alias to, so I can't comment on whether HMR will work for hooks. */
-                        { "react-dom": "react-nativescript" } :
-                        {}
-                    ),
+                /* Needed (I think) for react-hot-loader, but certainly for batched state updates in Redux. */
+                 "react-dom": "react-nativescript"
             },
             // resolve symlinks to symlinked modules
             symlinks: true
@@ -290,6 +285,7 @@ module.exports = env => {
             // Remove all files from the out dir.
             new CleanWebpackPlugin(itemsToClean, { verbose: !!verbose }),
             // Copy assets to out dir. Add your own globs as needed.
+            // FIXME(?) need to investigate: https://github.com/NativeScript/nativescript-cli/issues/4944
             new CopyWebpackPlugin([
                 { from: { glob: "fonts/**" } },
                 { from: { glob: "**/*.jpg" } },
