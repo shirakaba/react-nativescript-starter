@@ -1,6 +1,6 @@
 {
   "name": "tns-template-blank-react",
-  "version": "6.3.0",
+  "version": "6.3.2",
   "nativescript": {
     "id": "org.nativescript.Blank",
     "tns-android": {
