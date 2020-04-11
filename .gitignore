@@ -8,6 +8,7 @@ platforms/
 *.js.map
 *.js
 !react-nativescript.webpack.config.js
+!hooks/after-createProject/
 !hooks/after-createProject/after-createProject.js
 
 # Logs
