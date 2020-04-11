@@ -1,6 +1,6 @@
 {
   "name": "tns-template-blank-react",
-  "version": "6.5.0",
+  "version": "6.5.1",
   "nativescript": {
     "id": "org.nativescript.Blank",
     "tns-android": {
@@ -34,7 +34,7 @@
   "dependencies": {
     "@nativescript/theme": "2.2.1",
     "react": "^16.9.0",
-    "react-nativescript": "^0.21.0",
+    "react-nativescript": "^0.23.0",
     "tns-core-modules": "~6.5.0"
   },
   "devDependencies": {
