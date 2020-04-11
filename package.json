@@ -4,10 +4,10 @@
   "nativescript": {
     "id": "org.nativescript.Blank",
     "tns-android": {
-      "version": "6.4.1"
+      "version": "6.5.0"
     },
     "tns-ios": {
-      "version": "6.4.0"
+      "version": "6.5.0"
     },
     "templateVersion": "v2"
   },
@@ -35,7 +35,7 @@
     "@nativescript/theme": "2.2.1",
     "react": "^16.9.0",
     "react-nativescript": "^0.18.0",
-    "tns-core-modules": "~6.4.0"
+    "tns-core-modules": "~6.5.0"
   },
   "devDependencies": {
     "@babel/core": "~7.5.5",
