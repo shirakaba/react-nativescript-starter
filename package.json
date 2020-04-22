@@ -13,6 +13,10 @@
   },
   "description": "Blank template for NativeScript apps using React.",
   "author": "Jamie Birch <14055146+shirakaba@users.noreply.github.com>",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch"
+  },
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -38,11 +42,13 @@
     "tns-core-modules": "~6.5.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.5.5",
-    "@babel/plugin-proposal-class-properties": "~7.5.5",
-    "@babel/preset-react": "~7.0.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.9.0",
     "@types/react": "~16.9.2",
-    "awesome-typescript-loader": "~5.2.1",
     "babel-loader": "~8.0.6",
     "fork-ts-checker-webpack-plugin": "~1.5.0",
     "nativescript-dev-webpack": "~1.5.0",
