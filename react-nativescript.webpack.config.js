@@ -13,7 +13,20 @@ module.exports = (env) => {
         babelrc: false,
         presets: [
             // https://github.com/Microsoft/TypeScript-Babel-Starter
-            "@babel/env",
+            [
+                "@babel/env",
+                {
+                    // I can't advise which exact targets to use, because NativeScript doesn't totally align.
+                    // These have been chosen arbitrarily as recent versions of Chrome and Safari (April 2020).
+                    "targets": {
+                        // Android runtime is based on V8
+                        "chrome": "81.0",
+                        // iOS runtime is based on JSC (but will soon become V8)
+                        "safari": "13.1"
+                    },
+                    "useBuiltIns": "usage",
+                }
+            ],
             "@babel/typescript",
             "@babel/react"
         ],
