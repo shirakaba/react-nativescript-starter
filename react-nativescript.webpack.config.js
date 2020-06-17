@@ -1,6 +1,6 @@
 const webpackConfig = require("./webpack.config");
 const webpack = require("webpack");
-const path = require("path");
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = (env) => {
     env = env || {};
@@ -13,20 +13,7 @@ module.exports = (env) => {
         babelrc: false,
         presets: [
             // https://github.com/Microsoft/TypeScript-Babel-Starter
-            [
-                "@babel/env",
-                {
-                    // I can't advise which exact targets to use, because NativeScript doesn't totally align.
-                    // These have been chosen arbitrarily as recent versions of Chrome and Safari (April 2020).
-                    "targets": {
-                        // Android runtime is based on V8
-                        "chrome": "81.0",
-                        // iOS runtime is based on JSC (but will soon become V8)
-                        "safari": "13.1"
-                    },
-                    "useBuiltIns": "usage",
-                }
-            ],
+            "@babel/env",
             "@babel/typescript",
             "@babel/react"
         ],
@@ -34,7 +21,7 @@ module.exports = (env) => {
             ...(
                 hmr && !production ?
                     [
-                        ["react-hot-loader/babel"]
+                        require.resolve('react-refresh/babel')
                     ] :
                     []
             ),
@@ -44,28 +31,45 @@ module.exports = (env) => {
 
     const baseConfig = webpackConfig(env);
 
-    // Omit `ts` from the hot-loader test as we'll be using Babel Loader + React Hot Loader for ts(x) and js(x) files instead.
-    const hotLoader = baseConfig.module.rules.filter(rule => rule.use === "nativescript-dev-webpack/hmr/hot-loader")[0];
-    hotLoader.test = /\.(css|scss|html|xml)$/;
-
     // Remove ts-loader as we'll be using Babel to transpile the TypeScript instead.
     baseConfig.module.rules = baseConfig.module.rules.filter((rule) => {
-        return rule.loader !== "ts-loader";
+        const isTsLoader = rule.use && rule.use.loader === "ts-loader";
+        return !isTsLoader;
+    });
+
+    // Modify "nativescript-dev-webpack/hmr/hot-loader" to test for .tsx files
+    // (and also js(x) files, which it should have been doing to begin with!)
+    baseConfig.module.rules.some(rule => {
+        const isNativeScriptDevWebpackHotLoader = rule.use === "nativescript-dev-webpack/hmr/hot-loader";
+
+        if(isNativeScriptDevWebpackHotLoader){
+            rule.test = /\.(ts|tsx|js|jsx|css|scss|html|xml)$/;
+        }
+
+        return isNativeScriptDevWebpackHotLoader; // Break loop once we've found the one.
     });
 
     baseConfig.module.rules.push(
         {
-            test: /\.(ts|js)x?$/,
+            test: /\.[jt]s(x?)$/,
             exclude: /node_modules/,
-            use: {
-                loader: "babel-loader",
-                options: babelOptions
-            },
+            use: [
+                {
+                    loader: "babel-loader",
+                    options: babelOptions
+                }
+            ],
         }
     );
 
     baseConfig.resolve.extensions = [".ts", ".tsx", ".js", ".jsx", ".scss", ".css"];
     baseConfig.resolve.alias["react-dom"] = "react-nativescript";
+
+    // Remove ForkTsCheckerWebpackPlugin because, now that we're using Babel, we'll leave type-checking to the IDE instead.
+    baseConfig.plugins = baseConfig.plugins.filter(plugin => {
+        const isForkTsCheckerWebpackPlugin = plugin && plugin.constructor && plugin.constructor.name === "ForkTsCheckerWebpackPlugin";
+        return !isForkTsCheckerWebpackPlugin;
+    });
 
     // Augment NativeScript's existing DefinePlugin definitions with a few more of our own.
     let existingDefinePlugin;
@@ -74,33 +78,33 @@ module.exports = (env) => {
         existingDefinePlugin = plugin;
         return !isDefinePlugin;
     });
-    baseConfig.plugins.unshift(
-        new webpack.DefinePlugin({
-            ...existingDefinePlugin.definitions,
-            /* For various libraries in the React ecosystem. */
-            "__DEV__": production ? "false" : "true",
-            ...(
-                hmr ?
-                    {
-                        /* react-hot-loader expects to run in an environment where globals are stored on the `window` object.
-                         * NativeScript uses `global` instead, so we'll alias that to satisfy it.
-                         *
-                         * Somehow `var globalValue = window` throws a ReferenceError if `window` is aliased to `global`,
-                         * but is fine if aliased to `global.global`. */
-                        "window": "global.global",
-                        /* Stops react-hot-loader from being bundled in production mode:
-                         * https://github.com/gaearon/react-hot-loader/issues/602#issuecomment-340246945 */
-                        "process.env.NODE_ENV": JSON.stringify(production ? "production" : "development"),
-                    } :
-                    {}
-            ),
-        }),
-    );
+    const newDefinitions = {
+        ...existingDefinePlugin.definitions,
+        /* For various libraries in the React ecosystem. */
+        "__DEV__": production ? "false" : "true",
+        "__TEST__": "false",
+        /*
+         * Primarily for React Fast Refresh plugin, but technically the forceEnable option could be used instead.
+         * Worth including anyway, as there are plenty of Node libraries that use this flag.
+         */
+        "process.env.NODE_ENV": JSON.stringify(production ? "production" : "development"),
+    };
+    baseConfig.plugins.unshift(new webpack.DefinePlugin(newDefinitions));
     
-    if(production){
-        /* Running this line seems to lead to React Hot Loader bundling production.min.js (which is empty)
-         * rather than its development lib (which is big and intrusive).
-         * So it should be understood that HMR is not supported in production mode. */
+    /**
+     * Set forceEnable to `true` if you want to use HMR on a production build.
+     */
+    const forceEnable = false;
+    if(hmr && (!production || forceEnable)){
+        baseConfig.plugins.push(new ReactRefreshWebpackPlugin({
+            /**
+             * Maybe one day we'll implement an Error Overlay, but the work involved is too daunting for now.
+             * @see https://github.com/pmmmwh/react-refresh-webpack-plugin/issues/79#issuecomment-644324557
+             */
+            overlay: false,
+            forceEnable,
+        }));
+    } else {
         baseConfig.plugins = baseConfig.plugins.filter(p => !(p && p.constructor && p.constructor.name === "HotModuleReplacementPlugin"));
     }
 

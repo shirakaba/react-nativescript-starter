@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "moduleResolution": "node",
+        "target": "es2015",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
 		// Process & infer types from .js files.
@@ -16,7 +17,7 @@
         "noEmitOnError": true,
         "jsx": "react",
         "lib": [
-            "esnext",
+            "es6",
             "dom"
         ],
         "baseUrl": ".",

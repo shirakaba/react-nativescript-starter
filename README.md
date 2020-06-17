@@ -56,8 +56,8 @@ There is a single blank component located in:
 - `/components/AppContainer.tsx` - sets up an empty page layout.
 
 **Home** page has the following components:
-- `$ActionBar` - It holds the title of the page.
-- `$GridLayout` - The main page layout that should contains all the page content.
+- `<actionBar>` - It holds the title of the page.
+- `<gridLayout>` - The main page layout that should contains all the page content.
 
 ## Get Help
 The NativeScript framework has a vibrant community that can help when you run into problems.
