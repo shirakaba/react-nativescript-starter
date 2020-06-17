@@ -1,3 +1,4 @@
+import * as React from "react";
 import { alert } from "tns-core-modules/ui/dialogs";
 
 export default function Greeting({}) {
